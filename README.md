@@ -26,7 +26,7 @@ docker-compose up --build
 ### 😥 Sem Docker Compose
 #### 📁 Ajustar variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto e adicione as variáveis necessárias (há um `.env.example` de demonstração):
+Crie um arquivo `.env` na pasta ```api/``` e adicione as variáveis necessárias (há um `.env.example` de demonstração):
 
 ```ini
 REDIS_HOST=string
