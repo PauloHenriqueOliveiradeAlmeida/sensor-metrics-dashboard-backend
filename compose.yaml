@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./api
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - MQTT_BROKER=mosquitto
+      - MQTT_PORT=1883
+  redis:
+    image: "redis:alpine"
+    ports:
+      - "6379:6379"
+  mosquitto:
+    image: "eclipse-mosquitto"
+    ports:
+      - "1883:1883"
+    volumes:
+      - ./mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf
