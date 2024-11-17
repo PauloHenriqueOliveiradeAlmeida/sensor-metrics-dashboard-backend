@@ -37,10 +37,12 @@ MQTT_BROKER=string
 MQTT_PORT=integer
 ```
 
-### Criação de um ambiente virtual
+### 🏞️ Criação de um ambiente virtual
 Crie um novo ambiente virtual:
 ```ini
 python -m venv .venv
+
+source .venv/bin/activate
 ```
 
 ### 📦 Instalação dos pacotes
@@ -49,7 +51,7 @@ Execute a instalação das dependências necessárias:
 pip install --no-cache-dir -r requirements.txt
 ```
 
-### Executando o projeto
+### 🚀 Executando o projeto
 Execute o comando de inicialização:
 ```ini
 fastapí run --host 0.0.0.0 --port 8000
