@@ -14,4 +14,4 @@ async def notifier(websocket: WebSocket):
         while True:
             await websocket.receive_text()
     except WebSocketDisconnect:
-        await notifier_service.subscribe(websocket)
+        await notifier_service.unsubscribe(websocket)
