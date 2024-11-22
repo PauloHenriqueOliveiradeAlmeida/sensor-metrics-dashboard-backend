@@ -7,9 +7,8 @@ from App.Core.Shared.Events.UpdateSensorMetrics.Dtos.UpdateSensorMetricsPayloadD
 from App.Core.Shared.Events.UpdateSensorMetrics.UpdateSensorMetricsEventDispatcher import (
     UpdateSensorMetricsEventDispatcher,
 )
-from App.Core.Shared.Filters.CorrelationFilter import CorrelationFilter
-from App.Core.Shared.Filters.StandardDeviationFilter import StandardDeviationFilter
 from App.Core.Shared.Repositories.Cache.ICacheRepository import ICacheRepository
+import numpy
 
 
 class SensorService:
@@ -25,22 +24,24 @@ class SensorService:
         if not temperature_sensor_metrics or not humidity_sensor_metrics:
             return
 
-        temperature_standard_deviation = StandardDeviationFilter().execute(
-            temperature_sensor_metrics
-        )
-        humidity_standard_deviation = StandardDeviationFilter().execute(
-            humidity_sensor_metrics
-        )
-        correlation = CorrelationFilter().execute(
-            temperature_sensor_metrics, humidity_sensor_metrics
-        )
+        temperature_standard_deviation = numpy.std([
+            metric for metric in temperature_sensor_metrics if metric != 0
+        ])
+        humidity_standard_deviation = numpy.std([
+            metric for metric in temperature_sensor_metrics if metric != 0
+        ])
 
+        min_length = min(len(temperature_sensor_metrics), len(humidity_sensor_metrics))
+        correlation = numpy.corrcoef(
+            temperature_sensor_metrics[:min_length],
+            humidity_sensor_metrics[:min_length],
+        )
         self.update_sensor_metrics_event_dispatcher.dispatch(
             UpdateSensorMetricsEventPayloadDto(
                 temperature_metrics=temperature_sensor_metrics,
                 humidity_metrics=humidity_sensor_metrics,
-                temperature_standard_deviation=temperature_standard_deviation,
-                humidity_standard_deviation=humidity_standard_deviation,
-                correlation=correlation,
+                temperature_standard_deviation=temperature_standard_deviation.__float__(),
+                humidity_standard_deviation=humidity_standard_deviation.__float__(),
+                correlation=correlation[0, 1],
             )
         )
